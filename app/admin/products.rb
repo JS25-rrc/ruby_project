@@ -5,14 +5,14 @@ ActiveAdmin.register Product do
   #
   # Uncomment all parameters which should be permitted for assignment
   #
-  # permit_params :name, :description, :price, :stock_quantity, :on_sale, :sale_price
+  permit_params :name, :description, :price, :stock_quantity, :on_sale, :sale_price
   #
   # or
   #
   # permit_params do
-  #   permitted = [:name, :description, :price, :stock_quantity, :on_sale, :sale_price]
-  #   permitted << :other if params[:action] == 'create' && current_user.admin?
-  #   permitted
+  # permitted = [:name, :description, :price, :stock_quantity, :on_sale, :sale_price]
+  # permitted << :other if params[:action] == 'create' && current_user.admin?
+  # permitted
   # end
   
 end
