@@ -1,0 +1,21 @@
+<div>
+  <%= f.label :address %>
+  <%= f.text_field :address %>
+</div>
+
+<div>
+  <%= f.label :city %>
+  <%= f.text_field :city %>
+</div>
+
+<div>
+  <%= f.label :postal_code %>
+  <%= f.text_field :postal_code %>
+</div>
+
+<div>
+  <%= f.label :province_id, "Province" %>
+  <%= f.select :province_id,
+    options_from_collection_for_select(Province.all, :id, :name),
+    { include_blank: "Select a province" } %>
+</div>
