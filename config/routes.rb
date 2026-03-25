@@ -1,4 +1,5 @@
 Rails.application.routes.draw do
+  get "search/index"
   get "cart/show"
   # ActiveAdmin and Devise setup
   devise_for :admin_users, ActiveAdmin::Devise.config
@@ -8,6 +9,8 @@ Rails.application.routes.draw do
   root 'products#index'
   get "/cart", to: "cart#show", as: :cart
   resources :cart_items, only: [:create, :update, :destroy]
+
+  get "/search", to: "search#index", as: :search
 
   # Define your application routes per the DSL in https://guides.rubyonrails.org/routing.html
 
