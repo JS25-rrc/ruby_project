@@ -1,0 +1,26 @@
+<h1>Order #<%= @order.id %></h1>
+<p>Date: <%= @order.created_at.strftime("%B %d, %Y") %></p>
+<p>Status: <%= @order.status %></p>
+
+<h2>Items</h2>
+<% @order.order_items.each do |item| %>
+  <div>
+    <p><%= item.product_name %> x <%= item.quantity %> — $<%= item.line_total %></p>
+    <p>Unit price at time of purchase: $<%= item.unit_price %></p>
+  </div>
+<% end %>
+
+<hr>
+<p>Subtotal: $<%= @order.subtotal %></p>
+<% if @order.gst_amount > 0 %>
+  <p>GST: $<%= @order.gst_amount %></p>
+<% end %>
+<% if @order.pst_amount > 0 %>
+  <p>PST: $<%= @order.pst_amount %></p>
+<% end %>
+<% if @order.hst_amount > 0 %>
+  <p>HST: $<%= @order.hst_amount %></p>
+<% end %>
+<p><strong>Grand Total: $<%= @order.grand_total %></strong></p>
+
+<%= link_to "Back to Orders", orders_path %>

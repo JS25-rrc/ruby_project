@@ -1,7 +1,11 @@
 Rails.application.routes.draw do
+  get "orders/index"
+  get "orders/show"
   devise_for :users
   devise_for :admin_users, ActiveAdmin::Devise.config
   ActiveAdmin.routes(self)
+
+  resources :orders, only: [:index, :show]
 
   root 'products#index'
   resources :products, only: [:index, :show]

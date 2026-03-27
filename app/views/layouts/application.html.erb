@@ -40,5 +40,9 @@
       <p><%= flash[:alert] %></p>
     <% end %>
     <%= yield %>
+
+    <% if user_signed_in? %>
+      <%= link_to "My Orders", orders_path %>
+    <% end %>
   </body>
 </html>
