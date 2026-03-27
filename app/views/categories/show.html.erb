@@ -1,0 +1,12 @@
+<h1><%= @category.name %></h1>
+<p><%= @category.description %></p>
+
+<% if @products.any? %>
+  <% @products.each do |product| %>
+    <%= render product %>
+  <% end %>
+<% else %>
+  <p>No products in this category.</p>
+<% end %>
+
+<%= link_to "All Products", products_path %>

@@ -1,4 +1,5 @@
 Rails.application.routes.draw do
+  get "categories/show"
   devise_for :users
   get "search/index"
   get "cart/show"
@@ -12,6 +13,8 @@ Rails.application.routes.draw do
   resources :cart_items, only: [:create, :update, :destroy]
 
   get "/search", to: "search#index", as: :search
+
+  resources :categories, only: [:show]
 
   # Define your application routes per the DSL in https://guides.rubyonrails.org/routing.html
 
