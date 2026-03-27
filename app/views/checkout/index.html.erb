@@ -1,29 +1,49 @@
-<h1>Checkout</h1>
+<div class="row justify-content-center">
+  <div class="col-md-7">
+    <h1 class="mb-4">Checkout</h1>
+    <div class="card mb-4">
+      <div class="card-body">
+        <h5 class="card-title">Order Summary</h5>
+        <% @cart_items.each do |item| %>
+          <div class="d-flex justify-content-between py-2 border-bottom">
+            <span><%= item[:product].name %> <span class="text-muted">x <%= item[:quantity] %></span></span>
+            <strong>$<%= item[:line_total] %></strong>
+          </div>
+        <% end %>
+        <div class="d-flex justify-content-between py-2">
+          <span>Subtotal</span><span>$<%= @subtotal %></span>
+        </div>
+        <% if @gst_amount > 0 %>
+          <div class="d-flex justify-content-between py-1 text-muted">
+            <span>GST (<%= (@province.gst_rate * 100).round(1) %>%)</span><span>$<%= @gst_amount %></span>
+          </div>
+        <% end %>
+        <% if @pst_amount > 0 %>
+          <div class="d-flex justify-content-between py-1 text-muted">
+            <span>PST (<%= (@province.pst_rate * 100).round(1) %>%)</span><span>$<%= @pst_amount %></span>
+          </div>
+        <% end %>
+        <% if @hst_amount > 0 %>
+          <div class="d-flex justify-content-between py-1 text-muted">
+            <span>HST (<%= (@province.hst_rate * 100).round(1) %>%)</span><span>$<%= @hst_amount %></span>
+          </div>
+        <% end %>
+        <div class="d-flex justify-content-between py-2 border-top mt-2">
+          <strong>Grand Total</strong><strong>$<%= @grand_total %></strong>
+        </div>
+      </div>
+    </div>
 
-<h2>Order Summary</h2>
+    <div class="card mb-4">
+      <div class="card-body">
+        <h5 class="card-title">Shipping To</h5>
+        <p class="mb-0"><%= current_user.address %>, <%= current_user.city %>, <%= @province.name %></p>
+      </div>
+    </div>
 
-<% @cart_items.each do |item| %>
-  <div>
-    <p><%= item[:product].name %> x <%= item[:quantity] %> — $<%= item[:line_total] %></p>
+    <%= form_with url: checkout_path, method: :post do |f| %>
+      <%= f.hidden_field :province_id, value: @province.id %>
+      <%= f.submit "Place Order", class: "btn btn-dark w-100 py-2" %>
+    <% end %>
   </div>
-<% end %>
-
-<hr>
-<p>Subtotal: $<%= @subtotal %></p>
-<% if @gst_amount > 0 %>
-  <p>GST (<%= (@province.gst_rate * 100).round(1) %>%): $<%= @gst_amount %></p>
-<% end %>
-<% if @pst_amount > 0 %>
-  <p>PST (<%= (@province.pst_rate * 100).round(1) %>%): $<%= @pst_amount %></p>
-<% end %>
-<% if @hst_amount > 0 %>
-  <p>HST (<%= (@province.hst_rate * 100).round(1) %>%): $<%= @hst_amount %></p>
-<% end %>
-<p><strong>Grand Total: $<%= @grand_total %></strong></p>
-
-<p>Shipping to: <%= current_user.address %>, <%= current_user.city %>, <%= @province.name %></p>
-
-<%= form_with url: checkout_path, method: :post do |f| %>
-  <%= f.hidden_field :province_id, value: @province.id %>
-  <%= f.submit "Place Order" %>
-<% end %>
+</div>
