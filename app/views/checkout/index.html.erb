@@ -1,0 +1,29 @@
+<h1>Checkout</h1>
+
+<h2>Order Summary</h2>
+
+<% @cart_items.each do |item| %>
+  <div>
+    <p><%= item[:product].name %> x <%= item[:quantity] %> — $<%= item[:line_total] %></p>
+  </div>
+<% end %>
+
+<hr>
+<p>Subtotal: $<%= @subtotal %></p>
+<% if @gst_amount > 0 %>
+  <p>GST (<%= (@province.gst_rate * 100).round(1) %>%): $<%= @gst_amount %></p>
+<% end %>
+<% if @pst_amount > 0 %>
+  <p>PST (<%= (@province.pst_rate * 100).round(1) %>%): $<%= @pst_amount %></p>
+<% end %>
+<% if @hst_amount > 0 %>
+  <p>HST (<%= (@province.hst_rate * 100).round(1) %>%): $<%= @hst_amount %></p>
+<% end %>
+<p><strong>Grand Total: $<%= @grand_total %></strong></p>
+
+<p>Shipping to: <%= current_user.address %>, <%= current_user.city %>, <%= @province.name %></p>
+
+<%= form_with url: checkout_path, method: :post do |f| %>
+  <%= f.hidden_field :province_id, value: @province.id %>
+  <%= f.submit "Place Order" %>
+<% end %>

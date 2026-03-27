@@ -1,4 +1,10 @@
 Rails.application.routes.draw do
+  get "cart_items/create"
+  get "cart_items/update"
+  get "cart_items/destroy"
+  get "checkout/index"
+  get "checkout/confirm"
+  get "checkout/create"
   get "categories/show"
   devise_for :users
   get "search/index"
@@ -15,6 +21,10 @@ Rails.application.routes.draw do
   get "/search", to: "search#index", as: :search
 
   resources :categories, only: [:show]
+
+  resource :checkout, only: [:index, :create] do
+    get :confirm
+  end
 
   # Define your application routes per the DSL in https://guides.rubyonrails.org/routing.html
 
