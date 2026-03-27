@@ -49,3 +49,26 @@ products.each do |attrs|
 end
 
 puts "Seeded #{Product.count} products and #{Category.count} categories."
+
+# Faker products (to reach 100 total)
+require 'faker'
+
+extra_categories = [camping, hiking, winter, water]
+
+while Product.count < 100
+  category = extra_categories.sample
+  name = "#{Faker::Commerce.product_name} #{Faker::Adjective.positive.capitalize}"
+  next if Product.exists?(name: name)
+
+  product = Product.create!(
+    name: name,
+    description: Faker::Lorem.paragraph(sentence_count: 3),
+    price: Faker::Commerce.price(range: 19.99..499.99),
+    stock_quantity: rand(5..50),
+    on_sale: [true, false].sample,
+    sale_price: nil
+  )
+  ProductCategory.find_or_create_by!(product: product, category: category)
+end
+
+puts "Total products: #{Product.count}"
