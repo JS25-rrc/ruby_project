@@ -1,13 +1,17 @@
-<div>
-  <h2><%= link_to product.name, product %></h2>
-  <p><%= product.description %></p>
-  <% if product.on_sale && product.sale_price %>
-    <p>
-      <s>$<%= product.price %></s>
-      $<%= product.sale_price %>
-      (Save $<%= (product.price - product.sale_price).round(2) %>)
-    </p>
-  <% else %>
-    <p>$<%= product.price %></p>
-  <% end %>
+<div class="col-md-4 mb-4">
+  <div class="card h-100">
+    <div class="card-body">
+      <h5 class="card-title"><%= link_to product.name, product, class: "text-decoration-none" %></h5>
+      <p class="card-text text-muted"><%= truncate(product.description, length: 100) %></p>
+      <% if product.on_sale && product.sale_price %>
+        <p class="mb-0"><s class="text-muted">$<%= product.price %></s></p>
+        <p class="text-danger fw-bold">$<%= product.sale_price %> <small>(Save $<%= (product.price - product.sale_price).round(2) %>)</small></p>
+      <% else %>
+        <p class="fw-bold">$<%= product.price %></p>
+      <% end %>
+    </div>
+    <div class="card-footer">
+      <%= link_to "View Product", product, class: "btn btn-outline-dark btn-sm" %>
+    </div>
+  </div>
 </div>

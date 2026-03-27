@@ -6,43 +6,87 @@
     <meta name="apple-mobile-web-app-capable" content="yes">
     <%= csrf_meta_tags %>
     <%= csp_meta_tag %>
-
-    <%= link_to "Cart", cart_path %>
-    <%= link_to "Search", search_path %>
     <%= yield :head %>
-
     <link rel="manifest" href="/manifest.json">
     <link rel="icon" href="/icon.png" type="image/png">
     <link rel="icon" href="/icon.svg" type="image/svg+xml">
     <link rel="apple-touch-icon" href="/icon.png">
     <%= stylesheet_link_tag "application", "data-turbo-track": "reload" %>
     <%= javascript_importmap_tags %>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
   </head>
-
   <body>
-    <nav>
-      <% Category.all.each do |category| %>
-        <%= link_to category.name, category_path(category) %>
-      <% end %>
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+      <div class="container">
+        <%= link_to "NorthMart", root_path, class: "navbar-brand fw-bold" %>
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarMain">
+          <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarMain">
+          <ul class="navbar-nav me-auto">
+            <li class="nav-item dropdown">
+              <a class="nav-link dropdown-toggle" href="#" data-bs-toggle="dropdown">Categories</a>
+              <ul class="dropdown-menu">
+                <li><%= link_to "All Products", products_path, class: "dropdown-item" %></li>
+                <li><hr class="dropdown-divider"></li>
+                <% Category.all.each do |category| %>
+                  <li><%= link_to category.name, category_path(category), class: "dropdown-item" %></li>
+                <% end %>
+              </ul>
+            </li>
+            <li class="nav-item">
+              <%= link_to "Search", search_path, class: "nav-link" %>
+            </li>
+          </ul>
+          <ul class="navbar-nav ms-auto">
+            <li class="nav-item">
+              <%= link_to "Cart", cart_path, class: "nav-link" %>
+            </li>
+            <% if user_signed_in? %>
+              <li class="nav-item">
+                <%= link_to "My Orders", orders_path, class: "nav-link" %>
+              </li>
+              <li class="nav-item">
+                <%= link_to "Account", edit_user_registration_path, class: "nav-link" %>
+              </li>
+              <li class="nav-item">
+                <%= link_to "Sign Out", destroy_user_session_path, class: "nav-link", data: { turbo_method: :delete } %>
+              </li>
+            <% else %>
+              <li class="nav-item">
+                <%= link_to "Sign Up", new_user_registration_path, class: "nav-link" %>
+              </li>
+              <li class="nav-item">
+                <%= link_to "Sign In", new_user_session_path, class: "nav-link" %>
+              </li>
+            <% end %>
+          </ul>
+        </div>
+      </div>
     </nav>
-    <% if user_signed_in? %>
-      <%= link_to "Account", edit_user_registration_path %>
-      <%= link_to "Sign Out", destroy_user_session_path, data: { turbo_method: :delete } %>
-    <% else %>
-      <%= link_to "Sign Up", new_user_registration_path %>
-      <%= link_to "Sign In", new_user_session_path %>
-    <% end %>
-    <% if flash[:notice] %>
-      <p><%= flash[:notice] %></p>
-    <% end %>
 
-    <% if flash[:alert] %>
-      <p><%= flash[:alert] %></p>
-    <% end %>
-    <%= yield %>
+    <div class="container mt-4">
+      <% if flash[:notice] %>
+        <div class="alert alert-success alert-dismissible fade show">
+          <%= flash[:notice] %>
+          <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+        </div>
+      <% end %>
+      <% if flash[:alert] %>
+        <div class="alert alert-danger alert-dismissible fade show">
+          <%= flash[:alert] %>
+          <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+        </div>
+      <% end %>
 
-    <% if user_signed_in? %>
-      <%= link_to "My Orders", orders_path %>
-    <% end %>
+      <%= yield %>
+    </div>
+
+    <footer class="bg-dark text-white mt-5 py-3">
+      <div class="container text-center">
+        <p class="mb-0">&copy; <%= Date.today.year %> NorthMart Outdoor Supply Co.</p>
+      </div>
+    </footer>
   </body>
 </html>
