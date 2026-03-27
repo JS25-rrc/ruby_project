@@ -1,5 +1,13 @@
 <div>
   <h2><%= link_to product.name, product %></h2>
   <p><%= product.description %></p>
-  <p>$<%= product.price %></p>
+  <% if product.on_sale && product.sale_price %>
+    <p>
+      <s>$<%= product.price %></s>
+      $<%= product.sale_price %>
+      (Save $<%= (product.price - product.sale_price).round(2) %>)
+    </p>
+  <% else %>
+    <p>$<%= product.price %></p>
+  <% end %>
 </div>
