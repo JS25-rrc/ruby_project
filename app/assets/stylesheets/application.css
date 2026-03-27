@@ -33,6 +33,16 @@ label {
   display: block;
 }
 
+body {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+.container.mt-4 {
+  flex: 1;
+}
+
 /* Navbar */
 .navbar {
   background-color: #2d4a2d !important;
