@@ -1,26 +1,51 @@
-<h1>Order #<%= @order.id %></h1>
-<p>Date: <%= @order.created_at.strftime("%B %d, %Y") %></p>
-<p>Status: <%= @order.status %></p>
+<div class="row justify-content-center">
+  <div class="col-md-7">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+      <h1>Order #<%= @order.id %></h1>
+      <span class="badge bg-dark"><%= @order.status %></span>
+    </div>
+    <p class="text-muted">Placed on <%= @order.created_at.strftime("%B %d, %Y") %></p>
 
-<h2>Items</h2>
-<% @order.order_items.each do |item| %>
-  <div>
-    <p><%= item.product_name %> x <%= item.quantity %> — $<%= item.line_total %></p>
-    <p>Unit price at time of purchase: $<%= item.unit_price %></p>
+    <div class="card mb-4">
+      <div class="card-body">
+        <h5 class="card-title">Items</h5>
+        <% @order.order_items.each do |item| %>
+          <div class="d-flex justify-content-between py-2 border-bottom">
+            <span><%= item.product_name %> <span class="text-muted">x <%= item.quantity %></span></span>
+            <strong>$<%= item.line_total %></strong>
+          </div>
+        <% end %>
+        <div class="d-flex justify-content-between py-2">
+          <span>Subtotal</span><span>$<%= @order.subtotal %></span>
+        </div>
+        <% if @order.gst_amount > 0 %>
+          <div class="d-flex justify-content-between py-1 text-muted">
+            <span>GST</span><span>$<%= @order.gst_amount %></span>
+          </div>
+        <% end %>
+        <% if @order.pst_amount > 0 %>
+          <div class="d-flex justify-content-between py-1 text-muted">
+            <span>PST</span><span>$<%= @order.pst_amount %></span>
+          </div>
+        <% end %>
+        <% if @order.hst_amount > 0 %>
+          <div class="d-flex justify-content-between py-1 text-muted">
+            <span>HST</span><span>$<%= @order.hst_amount %></span>
+          </div>
+        <% end %>
+        <div class="d-flex justify-content-between py-2 border-top mt-2">
+          <strong>Grand Total</strong><strong>$<%= @order.grand_total %></strong>
+        </div>
+      </div>
+    </div>
+
+    <div class="card mb-4">
+      <div class="card-body">
+        <h5 class="card-title">Shipping To</h5>
+        <p class="mb-0"><%= @order.shipping_address %></p>
+      </div>
+    </div>
+
+    <%= link_to "Back to Orders", orders_path, class: "btn btn-outline-secondary" %>
   </div>
-<% end %>
-
-<hr>
-<p>Subtotal: $<%= @order.subtotal %></p>
-<% if @order.gst_amount > 0 %>
-  <p>GST: $<%= @order.gst_amount %></p>
-<% end %>
-<% if @order.pst_amount > 0 %>
-  <p>PST: $<%= @order.pst_amount %></p>
-<% end %>
-<% if @order.hst_amount > 0 %>
-  <p>HST: $<%= @order.hst_amount %></p>
-<% end %>
-<p><strong>Grand Total: $<%= @order.grand_total %></strong></p>
-
-<%= link_to "Back to Orders", orders_path %>
+</div>
