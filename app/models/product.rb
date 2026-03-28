@@ -1,6 +1,7 @@
 class Product < ApplicationRecord
   has_many :product_categories
   has_many :categories, through: :product_categories
+  has_one_attached :image
 
   scope :on_sale, -> { where(on_sale: true) }
   scope :new_arrivals, -> { where("created_at >= ?", 3.days.ago) }

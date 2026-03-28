@@ -1,18 +1,21 @@
 ActiveAdmin.register Product do
+  permit_params :name, :description, :price, :stock_quantity, :on_sale, :sale_price, :image
 
-  # See permitted parameters documentation:
-  # https://github.com/activeadmin/activeadmin/blob/master/docs/2-resource-customization.md#setting-up-strong-parameters
-  #
-  # Uncomment all parameters which should be permitted for assignment
-  #
-  permit_params :name, :description, :price, :stock_quantity, :on_sale, :sale_price
-  #
-  # or
-  #
-  # permit_params do
-  # permitted = [:name, :description, :price, :stock_quantity, :on_sale, :sale_price]
-  # permitted << :other if params[:action] == 'create' && current_user.admin?
-  # permitted
-  # end
-  
+  filter :name
+  filter :price
+  filter :on_sale
+  filter :stock_quantity
+
+  form do |f|
+    f.inputs do
+      f.input :name
+      f.input :description
+      f.input :price
+      f.input :stock_quantity
+      f.input :on_sale
+      f.input :sale_price
+      f.input :image, as: :file
+    end
+    f.actions
+  end
 end
