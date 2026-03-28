@@ -8,6 +8,13 @@ class CheckoutController < ApplicationController
     @subtotal = @cart_items.sum { |i| i[:line_total] }
     calculate_taxes(@province, @subtotal)
     @grand_total = @subtotal + @gst_amount + @pst_amount + @hst_amount
+
+    @payment_intent = Stripe::PaymentIntent.create(
+      amount: (@grand_total * 100).to_i,
+      currency: "cad",
+      metadata: { user_id: current_user.id }
+    )
+    @stripe_publishable_key = Rails.application.credentials.stripe[:publishable_key]
   end
 
   def create
@@ -23,13 +30,14 @@ class CheckoutController < ApplicationController
     order = Order.new(
       user: current_user,
       province: province,
-      status: "new",
+      status: "paid",
       subtotal: subtotal,
       gst_amount: gst,
       pst_amount: pst,
       hst_amount: hst,
       grand_total: grand_total,
-      shipping_address: current_user.address
+      shipping_address: current_user.address,
+      stripe_payment_id: params[:stripe_payment_intent_id]
     )
 
     @cart_items.each do |item|
@@ -48,7 +56,7 @@ class CheckoutController < ApplicationController
     if order.save
       session[:cart] = {}
       flash[:notice] = "Order placed successfully."
-      redirect_to root_path
+      redirect_to orders_path
     else
       flash[:alert] = "Something went wrong. Please try again."
       redirect_to checkout_path

@@ -41,9 +41,49 @@
       </div>
     </div>
 
-    <%= form_with url: checkout_path, method: :post do |f| %>
+    <div class="card mb-4">
+      <div class="card-body">
+        <h5 class="card-title mb-3">Payment</h5>
+        <div id="payment-element"></div>
+        <div id="payment-message" class="text-danger mt-2"></div>
+      </div>
+    </div>
+
+    <%= form_with url: checkout_path, method: :post, id: "payment-form" do |f| %>
       <%= f.hidden_field :province_id, value: @province.id %>
-      <%= f.submit "Place Order", class: "btn btn-dark w-100 py-2" %>
+      <%= f.hidden_field :stripe_payment_intent_id, value: @payment_intent.id %>
+      <button type="submit" id="submit-button" class="btn btn-dark w-100 py-2">Place Order</button>
     <% end %>
   </div>
 </div>
+
+<script src="https://js.stripe.com/v3/"></script>
+<script>
+  const stripe = Stripe("<%= @stripe_publishable_key %>");
+
+  const elements = stripe.elements({
+    clientSecret: "<%= @payment_intent.client_secret %>"
+  });
+
+  const paymentElement = elements.create("payment");
+  paymentElement.mount("#payment-element");
+
+  const form = document.getElementById("payment-form");
+  form.addEventListener("submit", async (e) => {
+    e.preventDefault();
+    document.getElementById("submit-button").disabled = true;
+
+    const { error } = await stripe.confirmPayment({
+      elements,
+      confirmParams: { return_url: window.location.origin },
+      redirect: "if_required"
+    });
+
+    if (error) {
+      document.getElementById("payment-message").textContent = error.message;
+      document.getElementById("submit-button").disabled = false;
+    } else {
+      form.submit();
+    }
+  });
+</script>
