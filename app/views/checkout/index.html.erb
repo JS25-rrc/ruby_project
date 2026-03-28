@@ -57,33 +57,41 @@
   </div>
 </div>
 
-<script src="https://js.stripe.com/v3/"></script>
+<%= content_for :head do %>
+  <script src="https://js.stripe.com/v3/"></script>
+<% end %>
+
 <script>
-  const stripe = Stripe("<%= @stripe_publishable_key %>");
+  document.addEventListener("turbo:load", function() {
+    const stripeKey = "<%= @stripe_publishable_key %>";
+    const clientSecret = "<%= @payment_intent.client_secret %>";
 
-  const elements = stripe.elements({
-    clientSecret: "<%= @payment_intent.client_secret %>"
-  });
+    if (!stripeKey || !clientSecret) return;
 
-  const paymentElement = elements.create("payment");
-  paymentElement.mount("#payment-element");
+    const stripe = Stripe(stripeKey);
+    const elements = stripe.elements({ clientSecret });
+    const paymentElement = elements.create("payment");
+    paymentElement.mount("#payment-element");
 
-  const form = document.getElementById("payment-form");
-  form.addEventListener("submit", async (e) => {
-    e.preventDefault();
-    document.getElementById("submit-button").disabled = true;
+    const form = document.getElementById("payment-form");
+    if (!form) return;
 
-    const { error } = await stripe.confirmPayment({
-      elements,
-      confirmParams: { return_url: window.location.origin },
-      redirect: "if_required"
+    form.addEventListener("submit", async (e) => {
+      e.preventDefault();
+      document.getElementById("submit-button").disabled = true;
+
+      const { error } = await stripe.confirmPayment({
+        elements,
+        confirmParams: { return_url: window.location.origin },
+        redirect: "if_required"
+      });
+
+      if (error) {
+        document.getElementById("payment-message").textContent = error.message;
+        document.getElementById("submit-button").disabled = false;
+      } else {
+        form.submit();
+      }
     });
-
-    if (error) {
-      document.getElementById("payment-message").textContent = error.message;
-      document.getElementById("submit-button").disabled = false;
-    } else {
-      form.submit();
-    }
   });
 </script>
