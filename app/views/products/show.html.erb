@@ -1,3 +1,9 @@
+<%= breadcrumbs(
+  { name: "Home", path: root_path },
+  { name: "Products", path: products_path },
+  { name: @product.name, path: product_path(@product) }
+) %>
+
 <div class="row">
   <div class="col-md-5">
     <% if @product.image.attached? %>

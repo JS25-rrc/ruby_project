@@ -1,3 +1,9 @@
+<%= breadcrumbs(
+  { name: "Home", path: root_path },
+  { name: "Categories", path: products_path },
+  { name: @category.name, path: category_path(@category) }
+) %>
+
 <h1><%= @category.name %></h1>
 <p><%= @category.description %></p>
 

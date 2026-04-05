@@ -1,5 +1,10 @@
 <div class="row justify-content-center">
   <div class="col-md-7">
+    <%= breadcrumbs(
+      { name: "Home", path: root_path },
+      { name: "Cart", path: cart_path },
+      { name: "Checkout", path: checkout_path }
+    ) %>
     <h1 class="mb-4">Checkout</h1>
     <div class="card mb-4">
       <div class="card-body">
