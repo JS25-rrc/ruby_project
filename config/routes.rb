@@ -1,4 +1,5 @@
 Rails.application.routes.draw do
+  get "pages/show"
   get "orders/index"
   get "orders/show"
   devise_for :users
@@ -17,6 +18,8 @@ Rails.application.routes.draw do
 
   get "/checkout", to: "checkout#index", as: :checkout
   post "/checkout", to: "checkout#create"
+
+  get "/pages/:slug", to: "pages#show", as: :page
 
   get "up" => "rails/health#show", as: :rails_health_check
   get "service-worker" => "rails/pwa#service_worker", as: :pwa_service_worker
